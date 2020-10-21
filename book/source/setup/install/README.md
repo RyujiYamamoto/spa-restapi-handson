@@ -51,4 +51,4 @@ WindowsでのDocker利用方法はいくつかありますがは、ここではD
 
 ハンズオン資料のダウンロードでGitを利用することもできるため、Gitをインストールします。ただし、他の手段でもダウンロードが出来るため、インストールは必須ではなく任意となります。
 
-ここでは、Windows用にGitを使うための git for windows をインストールします。[公式サイト](https://gitforwindows.org/)の案内に沿って、インストールしてください。
+ここでは、Windows用にGitを使うための Git for windows をインストールします。[公式サイト](https://gitforwindows.org/)の案内に沿って、インストールしてください。
