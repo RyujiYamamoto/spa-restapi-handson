@@ -78,7 +78,7 @@ Mavenプロジェクトの定義ファイルです。
 
 ブランクプロジェクト作成時に生成されたものをベースに使用しています。
 
-#### `docker/docker-compose.api-gen.yml`
+#### `docker/docker-compose.dev.yml`
 
 OpenAPI定義ファイルからクライアント実装を生成するための、Docker Composeの定義ファイルです。
 
