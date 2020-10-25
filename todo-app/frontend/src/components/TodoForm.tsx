@@ -1,13 +1,23 @@
 import React from 'react';
 import './TodoForm.css';
 import { useInput } from '../hooks/useInput';
+import { Todo } from '../backend/generated-rest-client';
+import { BackendService } from '../backend/BackendService';
 
-export const TodoForm: React.FC = () => {
+interface Props {
+  addTodo: (returnedTodo: Todo) => void;
+}
+
+export const TodoForm: React.FC<Props> = ({ addTodo }) => {
   const [text, textAttributes, setText] = useInput('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    //TODO:登録した際の処理を書く
+    if (!text) {
+      return;
+    }
+    BackendService.postTodo(text).then((response) => addTodo(response));
+    setText('');
   };
 
   return (

@@ -18,9 +18,13 @@ export const TodoBoard: React.FC = () => {
     BackendService.getTodos().then((response) => setTodos(response));
   }, []);
 
+  const addTodo = (returnedTodo: Todo) => {
+    setTodos(todos.concat(returnedTodo));
+  };
+
   return (
     <div className='TodoBoard_content'>
-      <TodoForm />
+      <TodoForm addTodo={addTodo} />
       <TodoFilter />
       <TodoList todos={todos} />
     </div>
