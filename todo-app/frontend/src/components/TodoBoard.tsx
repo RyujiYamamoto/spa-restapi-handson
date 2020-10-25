@@ -22,11 +22,19 @@ export const TodoBoard: React.FC = () => {
     setTodos(todos.concat(returnedTodo));
   };
 
+  const toggleTodoCompletion = (id: number) => {
+    const target = todos.find((todo) => todo.id === id);
+    if (!target) {
+      return;
+    }
+    BackendService.putTodo(id, !target.completed).then((returnedTodo) => setTodos(todos.map((todo) => (todo.id === id ? returnedTodo : todo))));
+  };
+
   return (
     <div className='TodoBoard_content'>
       <TodoForm addTodo={addTodo} />
       <TodoFilter />
-      <TodoList todos={todos} />
+      <TodoList todos={todos} toggleTodoCompletion={toggleTodoCompletion} />
     </div>
   );
 };
