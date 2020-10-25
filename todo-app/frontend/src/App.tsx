@@ -1,8 +1,14 @@
 import React from 'react';
+import './App.css'
+import { NavigationHeader } from './components/NavigationHeader';
+import { TodoBoard } from './components/TodoBoard';
 
 function App() {
   return (
-    <h1>Hello, world</h1>
+    <React.Fragment>
+      <NavigationHeader/>
+      <TodoBoard />
+    </React.Fragment>
   );
 }
 
