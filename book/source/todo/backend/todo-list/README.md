@@ -466,7 +466,6 @@ import static org.hamcrest.Matchers.hasSize;
 
 public class RestApiTest extends SimpleRestTestSupport {
 
-    @ClassRule
     public static OpenApiValidator openApiValidator = new OpenApiValidator(Paths.get("rest-api-specification/openapi.yaml"));
 
     @Test
