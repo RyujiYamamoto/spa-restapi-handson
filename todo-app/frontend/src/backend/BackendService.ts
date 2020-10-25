@@ -14,8 +14,21 @@ const requestLogger: Middleware = {
   }
 }
 
+const corsHandler: Middleware = {
+  pre: async (context) => {
+    return {
+      url: context.url,
+      init: {
+        ...context.init,
+        mode: 'cors',
+        credentials: 'include'
+      }
+    };
+  }
+}
+
 const configuration = new Configuration({
-  middleware: [requestLogger]
+  middleware: [corsHandler, requestLogger]
 });
 
 const todosApi = new TodosApi(configuration);
