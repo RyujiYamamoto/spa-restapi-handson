@@ -2,12 +2,22 @@ import React from 'react';
 import { TodoItem } from './TodoItem';
 import './TodoList.css';
 
-export const TodoList: React.FC = () => {
+type Todo = {
+  id: number;
+  text: string;
+  completed: boolean;
+};
+
+type Props = {
+  todos: Todo[];
+};
+
+export const TodoList: React.FC<Props> = ({ todos }) => {
   return (
-    <ul className="TodoList_list">
-      <TodoItem text="洗い物をする" completed={true}/>
-      <TodoItem text="洗濯物を干す" completed={false}/>
-      <TodoItem text="買い物へ行く" completed={false}/>
+    <ul className='TodoList_list'>
+      {todos.map((todo) => (
+        <TodoItem key={todo.id} id={todo.id} text={todo.text} completed={todo.completed} />
+      ))}
     </ul>
   );
 };
