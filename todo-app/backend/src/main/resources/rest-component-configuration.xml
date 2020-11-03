@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<component-configuration
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://tis.co.jp/nablarch/component-configuration"
-    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
+<component-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://tis.co.jp/nablarch/component-configuration" xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
 
   <!-- 環境設定ファイル -->
   <config-file file="common.config" />
@@ -45,6 +44,15 @@
     <property name="cleanBeforeMigrate" value="${flyway.cleanBeforeMigrate}"/>
   </component>
 
+  <!-- CORS設定 -->
+  <component name="cors" class="nablarch.fw.jaxrs.cors.BasicCors">
+    <property name="allowOrigins">
+      <component class="nablarch.core.repository.di.config.StringListComponentFactory">
+        <property name="values" value="${cors.origins}"/>
+      </component>
+    </property>
+  </component>
+
   <!-- ハンドラキュー構成 -->
   <component name="webFrontController" class="nablarch.fw.web.servlet.WebFrontController">
     <property name="handlerQueue">
@@ -64,6 +72,21 @@
         <component-ref name="transactionManagementHandler"/>
 
         <component-ref name="packageMapping"/>
+        <component class="nablarch.fw.jaxrs.JaxRsResponseHandler">
+          <property name="responseFinishers">
+            <list>
+              <!-- CORSレスポンス -->
+              <component class="nablarch.fw.jaxrs.cors.CorsResponseFinisher">
+                <property name="cors" ref="cors" />
+              </component>
+            </list>
+          </property>
+        </component>
+
+        <!-- CORSハンドラ -->
+        <component class="nablarch.fw.jaxrs.CorsPreflightRequestHandler">
+          <property name="cors" ref="cors" />
+        </component>
       </list>
     </property>
   </component>
