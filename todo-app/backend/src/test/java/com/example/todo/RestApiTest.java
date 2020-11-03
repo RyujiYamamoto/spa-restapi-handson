@@ -68,4 +68,19 @@ public class RestApiTest extends SimpleRestTestSupport {
 
     assertStatusCode("ToDoの登録", HttpResponse.Status.BAD_REQUEST, response);
   }
+
+  @Test
+  public void RESTAPIでToDoの状態を更新できる() throws Exception {
+    RestMockHttpRequest request = put("/api/todos/2003")
+        .setHeader("Content-Type", MediaType.APPLICATION_JSON).setBody(Map.of("completed", true));
+    HttpResponse response = sendRequest(request);
+
+    assertStatusCode("ToDoのステータス更新", HttpResponse.Status.OK, response);
+
+    assertThat(response.getBodyString(), hasJsonPath("$.id", equalTo(2003)));
+    assertThat(response.getBodyString(), hasJsonPath("$.text", equalTo("やること３")));
+    assertThat(response.getBodyString(), hasJsonPath("$.completed", equalTo(true)));
+
+    openApiValidator.validate("putTodo", request, response);
+  }
 }
