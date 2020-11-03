@@ -28,4 +28,11 @@ public class TodoService {
     todoRepository.add(userId, newTodo);
     return newTodo;
   }
+
+  public Todo updateStatus(UserId userId, TodoId todoId, TodoStatus status) {
+    Todo todo = todoRepository.get(todoId);
+    Todo changedTodo = todo.changeStatus(status);
+    todoRepository.update(userId, changedTodo);
+    return changedTodo;
+  }
 }

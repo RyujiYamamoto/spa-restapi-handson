@@ -24,4 +24,8 @@ public class Todo {
   public TodoStatus status() {
     return status;
   }
+
+  public Todo changeStatus(TodoStatus status) {
+    return new Todo(id, text, status);
+  }
 }
