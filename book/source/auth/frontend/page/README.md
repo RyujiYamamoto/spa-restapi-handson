@@ -204,7 +204,7 @@ export const Login: React.FC = () => {
           <div className="Login_label">パスワード</div>
           <input type="password" />
         </div>
-        <div className="Login_buttonGruop">
+        <div className="Login_buttonGroup">
           <button className="Login_button">ログインする</button>
         </div>
       </div>
@@ -257,7 +257,7 @@ export const Login: React.FC = () => {
   text-align: left;
 }
 
-.Login_buttonGruop {
+.Login_buttonGroup {
   text-align: center;
   margin-top: 40px;
 }
