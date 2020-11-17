@@ -1,12 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useUserContext, AuthenticationFailedError } from '../contexts/UserContext';
+import { useInput } from '../hooks/useInput';
+import { useValidation, stringField } from '../validation';
 import './Login.css';
+
+type ValidationFields = {
+  userName: string;
+  password: string;
+};
 
 export const Login: React.FC = () => {
   const history = useHistory();
+  const [userName, userNameAttributes] = useInput('');
+  const [password, passwordAttributes] = useInput('');
+  const [formError, setFormError] = useState('');
+  const userContext = useUserContext();
+
+  const { error, handleSubmit } = useValidation<ValidationFields>({
+    userName: stringField().required('名前を入力してください'),
+    password: stringField().required('パスワードを入力してください'),
+  });
 
   const login: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
+    const result = await userContext.login(userName, password);
+    if (result instanceof AuthenticationFailedError) {
+      setFormError('ログインに失敗しました。名前またはパスワードが正しくありません。');
+      return;
+    }
     history.push('/board');
   };
 
@@ -15,17 +37,20 @@ export const Login: React.FC = () => {
       <div className='Login_box'>
         <div className='Login_title'>
           <h1>ログイン</h1>
+          <div className='error'>{formError}</div>
         </div>
-        <form className='Login_form' onSubmit={login}>
+        <form className='Login_form' onSubmit={handleSubmit({ userName, password }, login, () => setFormError(''))}>
           <div className='Login_item'>
             <div className='Login_label'>名前</div>
-            <input type='text' />
+            <input type='text' {...userNameAttributes} />
+            <div className='error'>{error.userName}</div>
           </div>
           <div className='Login_item'>
             <div className='Login_label'>パスワード</div>
-            <input type='password' />
+            <input type='password' {...passwordAttributes} />
+            <div className='error'>{error.password}</div>
           </div>
-          <div className='Login_buttonGroup'>
+          <div className='Login_buttonGruop'>
             <button type='submit' className='Login_button'>
               ログインする
             </button>
