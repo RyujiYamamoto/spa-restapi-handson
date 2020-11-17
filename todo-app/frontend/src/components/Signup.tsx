@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useUserContext } from '../contexts/UserContext';
+import { AccountConflictError, useUserContext } from '../contexts/UserContext';
 import { useInput } from '../hooks/useInput';
 import { stringField, useValidation } from '../validation';
 import './Signup.css';
@@ -14,11 +14,16 @@ export const Signup: React.FC = () => {
   const history = useHistory();
   const [userName, userNameAttributes] = useInput('');
   const [password, passwordAttributes] = useInput('');
+  const [formError, setFormError] = useState('');
   const userContext = useUserContext();
 
   const signup: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    await userContext.signup(userName, password);
+    const result = await userContext.signup(userName, password);
+    if (result instanceof AccountConflictError) {
+      setFormError('サインアップに失敗しました。同じ名前が登録されています。');
+      return;
+    }
     history.push('/');
   };
 
@@ -32,8 +37,9 @@ export const Signup: React.FC = () => {
       <div className='Signup_box'>
         <div className='Signup_title'>
           <h1>ユーザー登録</h1>
+          <div className='error'>{formError}</div>
         </div>
-        <form className='Signup_form' onSubmit={handleSubmit({ userName, password }, signup)}>
+        <form className='Signup_form' onSubmit={handleSubmit({ userName, password }, signup, () => setFormError(''))}>
           <div className='Signup_item'>
             <div className='Signup_label'>名前</div>
             <input type='text' {...userNameAttributes} />
