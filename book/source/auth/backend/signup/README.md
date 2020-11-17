@@ -137,7 +137,7 @@ public class AccountRegistrationService {
 ```java
 package com.example.authentication.api;
 
-import com.example.authentication.application.AuthenticationService;
+import com.example.authentication.application.AccountRegistrationService;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 import nablarch.core.validation.ee.ValidatorUtil;
 
