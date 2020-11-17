@@ -7,6 +7,7 @@ export const NavigationHeader: React.FC = () => {
   const userContext = useUserContext();
 
   const logout = async () => {
+    await userContext.logout();
     window.location.href = '/';
   };
 
