@@ -328,7 +328,7 @@ public enum AccountRegistrationResult {
 
 続いて、`AuthenticationAction`クラスを修正します。
 
-Nablarchでは、`HttpErrorResponse`（[Javadoc](https://nablarch.github.io/docs/5u18/javadoc/nablarch/fw/web/HttpErrorResponse.html)）の例外を送出することで、エラーレスポンスを返すことができます。`AuthenticationService#register`から`false`が返ってきたら、ステータスコードが`409 Conflict`のエラーレスポンスになるように実装します。
+Nablarchでは、`HttpErrorResponse`（[Javadoc](https://nablarch.github.io/docs/5u18/javadoc/nablarch/fw/web/HttpErrorResponse.html)）の例外を送出することで、エラーレスポンスを返すことができます。`AuthenticationService#register`から`AccountRegistrationResult.NAME_CONFLICT`が返ってきたら、ステータスコードが`409 Conflict`のエラーレスポンスになるように実装します。
 
 ```java
 ...
