@@ -37,3 +37,13 @@ VALUES (2003,
         'やること３',
         false,
         '1002');
+
+
+INSERT INTO account (user_id, password)
+VALUES ('1010',
+        'pass');
+
+
+INSERT INTO user_profile (user_id, name)
+VALUES ('1010',
+        'login-test');

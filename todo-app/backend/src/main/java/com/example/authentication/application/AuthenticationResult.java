@@ -19,6 +19,10 @@ public class AuthenticationResult {
     return new AuthenticationResult(Status.PASSWORD_MISMATCH, null);
   }
 
+  public static AuthenticationResult nameNotFound() {
+    return new AuthenticationResult(Status.NAME_NOT_FOUND, null);
+  }
+
   public boolean isFailed() {
     return status != Status.SUCCESS;
   }
@@ -31,6 +35,6 @@ public class AuthenticationResult {
   }
 
   private enum Status {
-    SUCCESS, PASSWORD_MISMATCH
+    SUCCESS, PASSWORD_MISMATCH, NAME_NOT_FOUND
   }
 }

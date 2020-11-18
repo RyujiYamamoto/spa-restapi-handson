@@ -4,7 +4,6 @@ import com.example.openapi.OpenApiValidator;
 import nablarch.fw.web.HttpResponse;
 import nablarch.fw.web.RestMockHttpRequest;
 import nablarch.test.core.http.SimpleRestTestSupport;
-import org.junit.ClassRule;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -43,5 +42,41 @@ public class AuthenticationRestApiTest extends SimpleRestTestSupport {
     assertStatusCode("サインアップ", HttpResponse.Status.CONFLICT, response);
 
     openApiValidator.validate("signup", secondRequest, response);
+  }
+
+  @Test
+  public void RESTAPIでログインできる() throws Exception {
+    RestMockHttpRequest request =
+        post("/api/login").setHeader("Content-Type", MediaType.APPLICATION_JSON)
+            .setBody(Map.of("userName", "login-test", "password", "pass"));
+    HttpResponse response = sendRequest(request);
+
+    assertStatusCode("ログイン", HttpResponse.Status.NO_CONTENT, response);
+
+    openApiValidator.validate("login", request, response);
+  }
+
+  @Test
+  public void パスワードが不一致の場合_ログインに失敗して401になる() throws Exception {
+    RestMockHttpRequest request =
+        post("/api/login").setHeader("Content-Type", MediaType.APPLICATION_JSON)
+            .setBody(Map.of("userName", "login-test", "password", "fail"));
+    HttpResponse response = sendRequest(request);
+
+    assertStatusCode("ログイン", HttpResponse.Status.UNAUTHORIZED, response);
+
+    openApiValidator.validate("login", request, response);
+  }
+
+  @Test
+  public void 名前が不一致の場合_ログインに失敗して401になる() throws Exception {
+    RestMockHttpRequest request =
+        post("/api/login").setHeader("Content-Type", MediaType.APPLICATION_JSON)
+            .setBody(Map.of("userName", "fail-test", "password", "pass"));
+    HttpResponse response = sendRequest(request);
+
+    assertStatusCode("ログイン", HttpResponse.Status.UNAUTHORIZED, response);
+
+    openApiValidator.validate("login", request, response);
   }
 }
