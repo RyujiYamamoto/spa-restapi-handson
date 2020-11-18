@@ -3,6 +3,7 @@ package com.example.todo.api;
 import com.example.todo.domain.*;
 
 import com.example.todo.application.TodoService;
+import nablarch.core.ThreadContext;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 import nablarch.core.validation.ee.ValidatorUtil;
 import javax.validation.constraints.NotNull;
@@ -28,7 +29,8 @@ public class TodosAction {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public List<TodoResponse> get() {
-    UserId userId = new UserId("1001"); // ダミーID
+    String userIdValue = ThreadContext.getUserId();
+    UserId userId = new UserId(userIdValue);
     List<Todo> todos = todoService.list(userId);
     return todos.stream().map(todo -> new TodoResponse(todo.id(), todo.text(), todo.status()))
         .collect(Collectors.toList());

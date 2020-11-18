@@ -2,6 +2,7 @@ package com.example.todo.api;
 
 import com.example.todo.application.TodoService;
 import com.example.todo.domain.*;
+import nablarch.core.ThreadContext;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 import nablarch.core.validation.ee.ValidatorUtil;
 import nablarch.fw.ExecutionContext;
@@ -27,7 +28,8 @@ public class TodoAction {
   public TodoResponse put(HttpRequest request, ExecutionContext context, PutRequest requestBody) {
     ValidatorUtil.validate(requestBody);
 
-    UserId userId = new UserId("1002");
+    String userIdValue = ThreadContext.getUserId();
+    UserId userId = new UserId(userIdValue);
     TodoId todoId = new TodoId(Long.valueOf(request.getParam("todoId")[0]));
     TodoStatus status = requestBody.completed ? TodoStatus.COMPLETED : TodoStatus.INCOMPLETE;
 

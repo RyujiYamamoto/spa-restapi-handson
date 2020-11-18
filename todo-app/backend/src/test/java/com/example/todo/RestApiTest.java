@@ -27,7 +27,7 @@ public class RestApiTest extends SimpleRestTestSupport {
   @Test
   public void RESTAPIでToDo一覧が取得できる() throws ValidationException {
     ExecutionContext executionContext = new ExecutionContext();
-    SessionUtil.put(executionContext, "user.id", "1010");
+    SessionUtil.put(executionContext, "user.id", "1001");
 
     RestMockHttpRequest request = get("/api/todos");
     HttpResponse response = sendRequestWithContext(request, executionContext);
