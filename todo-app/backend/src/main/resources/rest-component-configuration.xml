@@ -63,15 +63,12 @@
 
         <component class="nablarch.common.handler.threadcontext.ThreadContextClearHandler"/>
 
-        <component class="nablarch.fw.jaxrs.JaxRsResponseHandler"/>
-
         <component-ref name="threadContextHandler"/>
 
         <component-ref name="dbConnectionManagementHandler"/>
 
         <component-ref name="transactionManagementHandler"/>
 
-        <component-ref name="packageMapping"/>
         <component class="nablarch.fw.jaxrs.JaxRsResponseHandler">
           <property name="responseFinishers">
             <list>
@@ -87,6 +84,8 @@
         <component class="nablarch.fw.jaxrs.CorsPreflightRequestHandler">
           <property name="cors" ref="cors" />
         </component>
+
+        <component-ref name="packageMapping"/>
       </list>
     </property>
   </component>
