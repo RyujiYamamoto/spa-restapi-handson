@@ -1,11 +1,12 @@
 package com.example.todo;
 
 import com.example.openapi.OpenApiValidator;
+import nablarch.common.web.session.SessionUtil;
+import nablarch.fw.ExecutionContext;
 import nablarch.fw.web.HttpResponse;
 import nablarch.fw.web.RestMockHttpRequest;
 import nablarch.test.core.http.SimpleRestTestSupport;
 import org.hamcrest.Matchers;
-import org.junit.ClassRule;
 import org.junit.Test;
 import org.openapi4j.core.validation.ValidationException;
 
@@ -25,8 +26,12 @@ public class RestApiTest extends SimpleRestTestSupport {
 
   @Test
   public void RESTAPIでToDo一覧が取得できる() throws ValidationException {
+    ExecutionContext executionContext = new ExecutionContext();
+    SessionUtil.put(executionContext, "user.id", "1010");
+
     RestMockHttpRequest request = get("/api/todos");
-    HttpResponse response = sendRequest(request);
+    HttpResponse response = sendRequestWithContext(request, executionContext);
+
 
     assertStatusCode("ToDo一覧の取得", HttpResponse.Status.OK, response);
 
@@ -47,9 +52,12 @@ public class RestApiTest extends SimpleRestTestSupport {
 
   @Test
   public void RESTAPIでToDoを登録できる() throws Exception {
+    ExecutionContext executionContext = new ExecutionContext();
+    SessionUtil.put(executionContext, "user.id", "1010");
+
     RestMockHttpRequest request = post("/api/todos")
         .setHeader("Content-Type", MediaType.APPLICATION_JSON).setBody(Map.of("text", "テストする"));
-    HttpResponse response = sendRequest(request);
+    HttpResponse response = sendRequestWithContext(request, executionContext);
 
     assertStatusCode("ToDoの登録", HttpResponse.Status.OK, response);
 
@@ -62,18 +70,24 @@ public class RestApiTest extends SimpleRestTestSupport {
 
   @Test
   public void ToDo登録時にtext項目が無い場合_登録に失敗して400になる() {
+    ExecutionContext executionContext = new ExecutionContext();
+    SessionUtil.put(executionContext, "user.id", "1010");
+
     RestMockHttpRequest request = post("/api/todos")
         .setHeader("Content-Type", MediaType.APPLICATION_JSON).setBody(Collections.emptyMap());
-    HttpResponse response = sendRequest(request);
+    HttpResponse response = sendRequestWithContext(request, executionContext);
 
     assertStatusCode("ToDoの登録", HttpResponse.Status.BAD_REQUEST, response);
   }
 
   @Test
   public void RESTAPIでToDoの状態を更新できる() throws Exception {
+    ExecutionContext executionContext = new ExecutionContext();
+    SessionUtil.put(executionContext, "user.id", "1010");
+
     RestMockHttpRequest request = put("/api/todos/2003")
         .setHeader("Content-Type", MediaType.APPLICATION_JSON).setBody(Map.of("completed", true));
-    HttpResponse response = sendRequest(request);
+    HttpResponse response = sendRequestWithContext(request, executionContext);
 
     assertStatusCode("ToDoのステータス更新", HttpResponse.Status.OK, response);
 

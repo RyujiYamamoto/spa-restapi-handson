@@ -87,6 +87,8 @@
 
         <component-ref name="sessionStoreHandler" />
 
+        <component class="com.example.system.nablarch.handler.LoginCheckHandler"/>
+
         <component-ref name="packageMapping"/>
       </list>
     </property>

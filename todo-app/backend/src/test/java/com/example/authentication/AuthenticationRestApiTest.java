@@ -1,6 +1,8 @@
 package com.example.authentication;
 
 import com.example.openapi.OpenApiValidator;
+import nablarch.common.web.session.SessionUtil;
+import nablarch.fw.ExecutionContext;
 import nablarch.fw.web.HttpResponse;
 import nablarch.fw.web.RestMockHttpRequest;
 import nablarch.test.core.http.SimpleRestTestSupport;
@@ -78,5 +80,18 @@ public class AuthenticationRestApiTest extends SimpleRestTestSupport {
     assertStatusCode("ログイン", HttpResponse.Status.UNAUTHORIZED, response);
 
     openApiValidator.validate("login", request, response);
+  }
+
+  @Test
+  public void RESTAPIでログアウトできる() throws Exception {
+    ExecutionContext executionContext = new ExecutionContext();
+    SessionUtil.put(executionContext, "user.id", "1010");
+
+    RestMockHttpRequest request = post("/api/logout");
+    HttpResponse response = sendRequestWithContext(request, executionContext);
+
+    assertStatusCode("ログアウト", HttpResponse.Status.NO_CONTENT, response);
+
+    openApiValidator.validate("logout", request, response);
   }
 }

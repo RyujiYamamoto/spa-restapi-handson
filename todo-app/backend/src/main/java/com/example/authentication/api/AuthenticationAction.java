@@ -71,4 +71,10 @@ public class AuthenticationAction {
     @NotNull
     public String password;
   }
+
+  @Path("/logout")
+  @POST
+  public void logout(ExecutionContext executionContext) {
+    SessionUtil.invalidate(executionContext);
+  }
 }
