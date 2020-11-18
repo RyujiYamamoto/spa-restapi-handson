@@ -85,6 +85,8 @@
           <property name="cors" ref="cors" />
         </component>
 
+        <component-ref name="sessionStoreHandler" />
+
         <component-ref name="packageMapping"/>
       </list>
     </property>
@@ -111,4 +113,15 @@
     </property>
   </component>
 
+  <!-- SessionManagerの設定 -->
+  <import file="nablarch/webui/session-store.xml" />
+
+  <component name="sessionManager" class="nablarch.common.web.session.SessionManager">
+    <property name="defaultStoreName" value="${nablarch.sessionManager.defaultStoreName}" />
+    <property name="availableStores">
+      <list>
+        <component-ref name="httpSessionStore" />
+      </list>
+    </property>
+  </component>
 </component-configuration>
