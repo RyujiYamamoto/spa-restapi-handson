@@ -1,9 +1,11 @@
 package com.example.authentication.api;
 
+import com.example.authentication.application.AccountRegistrationResult;
 import com.example.authentication.application.AccountRegistrationService;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 import nablarch.core.validation.ee.ValidatorUtil;
-
+import nablarch.fw.web.HttpErrorResponse;
+import nablarch.fw.web.HttpResponse;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -25,8 +27,11 @@ public class AuthenticationAction {
   @Consumes(MediaType.APPLICATION_JSON)
   public void signup(SignupRequest requestBody) {
     ValidatorUtil.validate(requestBody);
-
-    registrationService.register(requestBody.userName, requestBody.password);
+    AccountRegistrationResult result =
+        registrationService.register(requestBody.userName, requestBody.password);
+    if (result == AccountRegistrationResult.NAME_CONFLICT) {
+      throw new HttpErrorResponse(HttpResponse.Status.CONFLICT.getStatusCode());
+    }
   }
 
   public static class SignupRequest {
