@@ -33,6 +33,7 @@ export const UserContextProvider: React.FC = ({ children }) => {
     login: async (userName, password) => {
       try {
         await BackendService.login(userName, password);
+        await BackendService.refreshCsrfToken();
         setUserName(userName);
       } catch (error) {
         if (error.status === 401) {
@@ -43,6 +44,7 @@ export const UserContextProvider: React.FC = ({ children }) => {
     },
     logout: async () => {
       await BackendService.logout();
+      await BackendService.refreshCsrfToken();
       setUserName('');
     },
     userName: userName,

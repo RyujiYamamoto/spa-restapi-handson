@@ -20,7 +20,8 @@ public class LoginCheckHandler implements Handler<HttpRequest, Object> {
     private static final Logger logger = LoggerManager.get("DEV");
 
     public LoginCheckHandler() {
-        whitePatterns.add("/api/signup", HttpMethod.POST).add("/api/login", HttpMethod.POST);
+        whitePatterns.add("/api/signup", HttpMethod.POST).add("/api/login", HttpMethod.POST)
+                .add("/api/csrf_token", HttpMethod.GET);
     }
 
     @Override

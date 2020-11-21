@@ -44,6 +44,10 @@
     <property name="cleanBeforeMigrate" value="${flyway.cleanBeforeMigrate}"/>
   </component>
 
+  <!-- CSRFハンドラ -->>
+  <component name="csrfTokenVerificationHandler" class="nablarch.fw.web.handler.CsrfTokenVerificationHandler" />
+  <component name="csrfTokenEndpointHandler" class="com.example.system.nablarch.handler.csrf.CsrfTokenEndpointHandler" />
+
   <!-- セッションストア機能 -->
   <import file="nablarch/webui/session-store.xml" />
 
@@ -94,6 +98,15 @@
         <!-- CORSハンドラ -->
         <component class="nablarch.fw.jaxrs.CorsPreflightRequestHandler">
           <property name="cors" ref="cors" />
+        </component>
+
+        <!-- CSRFトークン検証ハンドラ -->
+        <component-ref name="csrfTokenVerificationHandler"/>
+
+        <!-- CSRFトークン取得APIのエンドポイント -->
+        <component class="nablarch.fw.RequestHandlerEntry">
+          <property name="requestPattern" value="/api/csrf_token" />
+          <property name="handler" ref="csrfTokenEndpointHandler" />
         </component>
 
         <component-ref name="dbConnectionManagementHandler"/>

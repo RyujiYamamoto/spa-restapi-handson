@@ -1,6 +1,9 @@
 package com.example.todo;
 
 import com.example.openapi.OpenApiValidator;
+import com.jayway.jsonpath.JsonPath;
+import nablarch.common.web.WebConfig;
+import nablarch.common.web.WebConfigFinder;
 import nablarch.common.web.session.SessionUtil;
 import nablarch.fw.ExecutionContext;
 import nablarch.fw.web.HttpResponse;
@@ -30,6 +33,7 @@ public class RestApiTest extends SimpleRestTestSupport {
     SessionUtil.put(executionContext, "user.id", "1001");
 
     RestMockHttpRequest request = get("/api/todos");
+    attachCsrfToken(request, executionContext);
     HttpResponse response = sendRequestWithContext(request, executionContext);
 
 
@@ -57,6 +61,7 @@ public class RestApiTest extends SimpleRestTestSupport {
 
     RestMockHttpRequest request = post("/api/todos")
         .setHeader("Content-Type", MediaType.APPLICATION_JSON).setBody(Map.of("text", "テストする"));
+    attachCsrfToken(request, executionContext);
     HttpResponse response = sendRequestWithContext(request, executionContext);
 
     assertStatusCode("ToDoの登録", HttpResponse.Status.OK, response);
@@ -75,6 +80,7 @@ public class RestApiTest extends SimpleRestTestSupport {
 
     RestMockHttpRequest request = post("/api/todos")
         .setHeader("Content-Type", MediaType.APPLICATION_JSON).setBody(Collections.emptyMap());
+    attachCsrfToken(request, executionContext);
     HttpResponse response = sendRequestWithContext(request, executionContext);
 
     assertStatusCode("ToDoの登録", HttpResponse.Status.BAD_REQUEST, response);
@@ -87,6 +93,7 @@ public class RestApiTest extends SimpleRestTestSupport {
 
     RestMockHttpRequest request = put("/api/todos/2003")
         .setHeader("Content-Type", MediaType.APPLICATION_JSON).setBody(Map.of("completed", true));
+    attachCsrfToken(request, executionContext);
     HttpResponse response = sendRequestWithContext(request, executionContext);
 
     assertStatusCode("ToDoのステータス更新", HttpResponse.Status.OK, response);
@@ -96,5 +103,25 @@ public class RestApiTest extends SimpleRestTestSupport {
     assertThat(response.getBodyString(), hasJsonPath("$.completed", equalTo(true)));
 
     openApiValidator.validate("putTodo", request, response);
+  }
+
+  private void attachCsrfToken(RestMockHttpRequest request, ExecutionContext context) {
+    HttpResponse response = sendRequest(get("/api/csrf_token"));
+    assertStatusCode("CSRFトークンの取得", HttpResponse.Status.OK, response);
+
+    String json = response.getBodyString();
+    String name = JsonPath.read(json, "$.csrfTokenHeaderName");
+    String value = JsonPath.read(json, "$.csrfTokenValue");
+
+    request.setHeader(name, value);
+
+    WebConfig webConfig = WebConfigFinder.getWebConfig();
+    String storedVarName = webConfig.getCsrfTokenSessionStoredVarName();
+    String storeName = webConfig.getCsrfTokenSavedStoreName();
+    if (storeName != null) {
+      SessionUtil.put(context, storedVarName, value, storeName);
+    } else {
+      SessionUtil.put(context, storedVarName, value);
+    }
   }
 }
