@@ -44,6 +44,19 @@
     <property name="cleanBeforeMigrate" value="${flyway.cleanBeforeMigrate}"/>
   </component>
 
+  <!-- セッションストア機能 -->
+  <import file="nablarch/webui/session-store.xml" />
+
+  <component name="sessionManager" class="nablarch.common.web.session.SessionManager">
+    <property name="defaultStoreName" value="${nablarch.sessionManager.defaultStoreName}" />
+    <property name="availableStores">
+      <list>
+        <!-- HTTPセッション上に保存するセッションストア -->
+        <component-ref name="httpSessionStore" />
+      </list>
+    </property>
+  </component>
+
   <!-- CORS設定 -->
   <component name="cors" class="nablarch.fw.jaxrs.cors.BasicCors">
     <property name="allowOrigins">
@@ -63,12 +76,6 @@
 
         <component class="nablarch.common.handler.threadcontext.ThreadContextClearHandler"/>
 
-        <component-ref name="threadContextHandler"/>
-
-        <component-ref name="dbConnectionManagementHandler"/>
-
-        <component-ref name="transactionManagementHandler"/>
-
         <component class="nablarch.fw.jaxrs.JaxRsResponseHandler">
           <property name="responseFinishers">
             <list>
@@ -80,12 +87,18 @@
           </property>
         </component>
 
+        <component-ref name="sessionStoreHandler" />
+
+        <component-ref name="threadContextHandler"/>
+
         <!-- CORSハンドラ -->
         <component class="nablarch.fw.jaxrs.CorsPreflightRequestHandler">
           <property name="cors" ref="cors" />
         </component>
 
-        <component-ref name="sessionStoreHandler" />
+        <component-ref name="dbConnectionManagementHandler"/>
+
+        <component-ref name="transactionManagementHandler"/>
 
         <component class="com.example.system.nablarch.handler.LoginCheckHandler"/>
 
@@ -115,15 +128,4 @@
     </property>
   </component>
 
-  <!-- SessionManagerの設定 -->
-  <import file="nablarch/webui/session-store.xml" />
-
-  <component name="sessionManager" class="nablarch.common.web.session.SessionManager">
-    <property name="defaultStoreName" value="${nablarch.sessionManager.defaultStoreName}" />
-    <property name="availableStores">
-      <list>
-        <component-ref name="httpSessionStore" />
-      </list>
-    </property>
-  </component>
 </component-configuration>
